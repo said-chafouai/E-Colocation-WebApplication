@@ -1,1 +1,13 @@
 # E-Colocation-WebApplication
+![](pictures/colocation1.PNG)
+![](pictures/2.PNG)
+![](pictures/3.PNG)
+![](pictures/4.PNG)
+![](pictures/5.PNG)
+![](pictures/6.PNG)
+![](pictures/7.PNG)
+![](pictures/8.PNG)
+![](pictures/9.PNG)
+![](pictures/10.PNG)
+![](pictures/11.PNG)
+![](pictures/12.PNG)
