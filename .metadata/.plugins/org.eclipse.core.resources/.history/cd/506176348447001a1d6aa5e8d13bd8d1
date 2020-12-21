@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--#########################  Head inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/head.jsp"/>
+        		
+    <!--##############################################################################-->
+  <title>
+    Material Dashboard by Creative Tim
+  </title>
+</head>
+
+<body class="">
+  <div class="wrapper ">
+  <!--#########################  Sidebar inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/sidebarAdmin.jsp"/>
+        		
+    <!--##############################################################################-->
+    <div class="main-panel">
+     <!--#########################  Navbar inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/navbar.jsp"/>
+        		
+    <!--##############################################################################-->
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Editer votre Profil</h4>
+                  <p class="card-category">Completez votre profil</p>
+                </div>
+                <div class="card-body">
+                <div id="profilSuccess">
+                 </div>
+                  <div id="profil">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="">Nom</label>
+                          <input type="text" class="form-control" id="nom" value="${user.nom}" >
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="">Prenom</label>
+                          <input type="text" class="form-control" id="prenom" value="${user.prenom}" >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="">Mot de passe</label>
+                          <input type="text" class="form-control" id="mdp"  value="${user.password}">
+                        </div>
+                      </div>
+                    <button class="btn btn-primary pull-right" onClick="modifierProfil()">Enregistrez</button>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     	</div>
+        <!--#########################  footer inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/footer.jsp"/>
+        		
+    <!--##############################################################################-->
+    </div>
+  </div>
+  <!--#########################  Plugin inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/plugin.jsp"/>
+        		
+    <!--##############################################################################-->
+    
+    <!--#########################  JS lib inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/js.jsp"/>
+        		
+    <!--##############################################################################-->
+    
+    
+	<script type="text/javascript">
+	
+	function modifierProfil(){
+		var form="modifierProfil";
+		var mdp = $("#mdp").val();
+		var nom = $("#nom").val();
+		var prenom = $("#prenom").val();
+		$.post("O_Profil",{
+			form: form,
+			mdp: mdp,
+			nom: nom,
+			prenom: prenom
+			
+		},function(data, status) {
+			$("#profilSuccess").html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+			'<i class="material-icons">close</i></button><span><b> Success - </b> This is a regular notification made with ".alert-success"</span></div>');
+			location.reload();
+		});
+	}
+	
+
+	</script>
+</body>
+
+</html>
+

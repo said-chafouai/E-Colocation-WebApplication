@@ -1,0 +1,42 @@
+package beansManager;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.sun.scenario.effect.PhongLighting;
+
+import beans.PhotoPropriete;
+import database.DataBase;
+
+public class ManagerPhotoPropriete {
+	public boolean fct_insert(PhotoPropriete pp) {
+		Connection connexion = null;
+		PreparedStatement preparedStmt = null;
+		boolean retour = false;
+		
+		try {
+			connexion = DataBase.connection();
+			preparedStmt = connexion.prepareStatement("insert into photo(id_pro, chemin) values(?,?)");
+			preparedStmt.setInt(1,pp.getId_pro());
+			preparedStmt.setString(2,pp.getChemin());
+			
+			retour = preparedStmt.execute();
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (preparedStmt != null)
+					preparedStmt.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+		return retour;
+	}
+
+}

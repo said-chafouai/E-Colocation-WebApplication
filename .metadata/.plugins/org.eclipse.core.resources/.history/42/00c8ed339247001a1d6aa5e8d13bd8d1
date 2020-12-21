@@ -1,0 +1,393 @@
+package beansManager;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+
+import beans.Utilisateur;
+import database.DataBase;
+
+public class ManagerUtilisateur {
+
+	public boolean fct_accepteRefuseDemandeInscription(int id_user, String decision) {
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		boolean retour = false;
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("update user set etat=? where id=?");
+			preparedStatement.setString(1,decision);
+			preparedStatement.setInt(2,id_user);
+			retour = preparedStatement.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return retour;
+		
+	}
+	public ArrayList<Utilisateur>fct_getAllInscriptionDemandes() {
+		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("SELECT * from user where etat='en_attente';");
+			resultat = preparedStatement.executeQuery();
+			
+			while (resultat.next()) {
+				Utilisateur utilisateur = new Utilisateur();
+
+				utilisateur.setId(resultat.getInt("id"));
+				utilisateur.setNom(resultat.getString("nom"));
+				utilisateur.setPrenom(resultat.getString("prenom"));
+				utilisateur.setAdresse(resultat.getString("adresse"));
+				utilisateur.setVille(resultat.getString("ville"));
+				utilisateur.setDescription(resultat.getString("description"));
+
+				utilisateurs.add(utilisateur);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return utilisateurs;
+
+	}
+	
+	public boolean modifierProfil(Utilisateur user) {
+		boolean statut = false;
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("update user SET password=?, ville=?, adresse=?, description=? WHERE id=?;");
+			preparedStatement.setString(1, user.getPassword());
+			preparedStatement.setString(2, user.getVille());
+			preparedStatement.setString(3, user.getAdresse());
+			preparedStatement.setString(4, user.getDescription());
+			preparedStatement.setInt(5, user.getId());
+			statut = preparedStatement.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+		return statut;
+	}
+	
+	
+	
+	/*
+	 * retourne la liste des demandeurs qui j'ai accepter (statut demande = valider)
+	 * */
+	public ArrayList<Utilisateur> fct_findMesDemandeur(int id_user) {
+		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("SELECT distinct o.id, o.nom, o.prenom FROM user o, propriete p, demande d WHERE d.id_user = o.id and d.statut='valider' and d.id_prop=p.id and p.id_proprietaire=?");
+			preparedStatement.setInt(1, id_user);
+			resultat = preparedStatement.executeQuery();
+			
+			while (resultat.next()) {
+				Utilisateur utilisateur = new Utilisateur();
+
+				utilisateur.setId(resultat.getInt("id"));
+				utilisateur.setNom(resultat.getString("nom"));
+				utilisateur.setPrenom(resultat.getString("prenom"));
+
+				utilisateurs.add(utilisateur);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return utilisateurs;
+
+	}
+	
+	
+	/*
+	 * retourne la liste des offreurs qui y ont accepter ma demande (statut demande = valider)
+	 * */
+	public ArrayList<Utilisateur> fct_findMesProprietaire(int id_demandeur) {
+		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("SELECT Distinct o.id, o.nom, o.prenom FROM user o, propriete p, demande d WHERE d.id_user = ? and d.statut='valider' and d.id_prop=p.id and p.id_proprietaire=o.id");
+			preparedStatement.setInt(1, id_demandeur);
+			resultat = preparedStatement.executeQuery();
+			
+			while (resultat.next()) {
+				Utilisateur utilisateur = new Utilisateur();
+
+				utilisateur.setId(resultat.getInt("id"));
+				utilisateur.setNom(resultat.getString("nom"));
+				utilisateur.setPrenom(resultat.getString("prenom"));
+
+				utilisateurs.add(utilisateur);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return utilisateurs;
+
+	}
+	
+	
+	public Utilisateur fct_findOne(int id_user) {
+		Utilisateur utilisateur = null;
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("select * from utilisateur where id=?");
+			preparedStatement.setInt(1, id_user);
+			resultat = preparedStatement.executeQuery();
+
+			if (resultat.next()) {
+				utilisateur = new Utilisateur();
+
+				utilisateur.setId(resultat.getInt("id"));
+				utilisateur.setLogin(resultat.getString("login"));
+				utilisateur.setPassword(resultat.getString("password"));
+				utilisateur.setNom(resultat.getString("nom"));
+				utilisateur.setPrenom(resultat.getString("prenom"));
+				utilisateur.setEtat(resultat.getString("etat"));
+				utilisateur.setStatut(resultat.getString("statut"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return utilisateur;
+
+	}
+	
+	public boolean fct_insert(HttpServletRequest request) {
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		boolean retour = false;
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("insert into user(login,password,nom,prenom,etat,statut) values(?,?,?,?,?,?);");
+			preparedStatement.setString(1,request.getParameter("login"));
+			preparedStatement.setString(2,request.getParameter("password"));
+			preparedStatement.setString(3,request.getParameter("nom"));
+			preparedStatement.setString(4,request.getParameter("prenom"));
+			preparedStatement.setString(5,"en_attente");
+			preparedStatement.setString(6,request.getParameter("statut"));
+			retour = preparedStatement.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return retour;
+
+	}
+
+	public ArrayList<Utilisateur> fct_findAll() {
+		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+		Connection connexion = null;
+		Statement statement = null;
+		ResultSet resultat = null;
+
+		try {
+			connexion = DataBase.connection();
+			statement = connexion.createStatement();
+			resultat = statement.executeQuery("select * from user;");
+
+			while (resultat.next()) {
+				Utilisateur utilisateur = new Utilisateur();
+
+				utilisateur.setId(resultat.getInt("id"));
+				utilisateur.setLogin(resultat.getString("login"));
+				utilisateur.setPassword(resultat.getString("password"));
+				utilisateur.setNom(resultat.getString("nom"));
+				utilisateur.setPrenom(resultat.getString("prenom"));
+				utilisateur.setEtat(resultat.getString("etat"));
+				utilisateur.setStatut(resultat.getString("statut"));
+
+				utilisateurs.add(utilisateur);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (statement != null)
+					statement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return utilisateurs;
+
+	}
+
+	public Utilisateur Connexion(String login, String password) {
+		Utilisateur utilisateur = null;
+		Connection connexion = null;
+		ResultSet resultat = null;
+		PreparedStatement preparedStatement = null;
+
+
+		try {
+			connexion = DataBase.connection();
+			preparedStatement = connexion.prepareStatement("select * from user where login=? and password=? and etat='valider';"); 
+			preparedStatement.setString(1, login);
+			preparedStatement.setString(2, password);
+			resultat = preparedStatement.executeQuery();
+
+			if (resultat.next()) {
+				utilisateur = new Utilisateur();
+
+				utilisateur.setId(resultat.getInt("id"));
+				utilisateur.setLogin(resultat.getString("login"));
+				utilisateur.setPassword(resultat.getString("password"));
+				utilisateur.setNom(resultat.getString("nom"));
+				utilisateur.setPrenom(resultat.getString("prenom"));
+				utilisateur.setVille(resultat.getString("ville"));
+				utilisateur.setAdresse(resultat.getString("adresse"));
+				utilisateur.setDescription(resultat.getString("description"));
+				utilisateur.setEtat(resultat.getString("etat"));
+				utilisateur.setStatut(resultat.getString("statut"));
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+
+		return utilisateur;
+
+
+	}
+
+}

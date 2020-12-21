@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.Iterator"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.io.PrintWriter"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="javax.servlet.http.HttpServletRequest"/>
+<fullyQualifiedTypeName name="beansManager.ManagerPropriete"/>
+<fullyQualifiedTypeName name="com.sun.scenario.effect.PhongLighting"/>
+<fullyQualifiedTypeName name="mesFonctions.FonctionUtil"/>
+<fullyQualifiedTypeName name="com.sun.xml.internal.fastinfoset.sax.Properties"/>
+<fullyQualifiedTypeName name="beans.Propriete"/>
+<fullyQualifiedTypeName name="beans.Utilisateur"/>
+<fullyQualifiedTypeName name="beansManager.ManagerPhotoPropriete"/>
+<fullyQualifiedTypeName name="beans.PhotoPropriete"/>
+<fullyQualifiedTypeName name="jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+</qualifiedTypeNameHistroy>

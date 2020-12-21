@@ -1,0 +1,175 @@
+<c:if test="${ empty sessionScope.offreur}">
+		<jsp:forward page="../Accueil/accueil.jsp"/>
+</c:if>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--#########################  Head inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/head.jsp"/>
+        		
+    <!--##############################################################################-->
+  <title>
+    Material Dashboard by Creative Tim
+  </title>
+</head>
+
+<body class="">
+  <div class="wrapper ">
+  <!--#########################  Sidebar inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/sidebarOffreur.jsp"/>
+        		
+    <!--##############################################################################-->
+    <div class="main-panel">
+     <!--#########################  Navbar inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/navbar.jsp"/>
+        		
+    <!--##############################################################################-->
+      <div class="content">
+        <div class="container-fluid">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Bienvenue dans le forum</h4>
+                  <p class="card-category">Vous pouvez voir et repondre sur les differnetes publications</p>
+                </div>
+                <div class="card-body">
+                <div id="success">
+                 </div>
+                	<div class="row">
+                		<div class="col-md-12">
+                		<a class="btn btn-warning pull-right" href="#publierForm">Faire une publication</a>
+                		</div>
+                	</div>
+                	<c:forEach var="publication" items="${publications}">
+                		<div class="row">
+		                	<div class="col-md-12">
+		                		<div class="alert alert-info">
+		                			<span><b> ${publication.nom} ${publication.prenom} | <small> ${publication.datePub}</small></b><br>${publication.pub} </span>
+								</div>
+								<button class="btn btn-success pull-right" onclick="showFormReponse(${publication.id})">Repondre</button>
+								<button class="btn btn-default pull-right" onclick="voirReponse(${publication.id})">Voir reponses</button>
+                                <!-- div pour les reponses pour chaque pub il ya une div  -->
+		                		
+		                		<div class="col-md-6" id="reponse${publication.id}">
+		                		</div>
+		                		
+                                <!-- div pour la formulaire de reponse : pour chaque pub il y a une form -->
+                                <div class="col-md-6" id="formReponse${publication.id}">
+                                </div>
+		                		
+		                	</div>
+	                	</div>
+					</c:forEach>                
+              </div>
+            </div>
+            
+            
+            <div class="row" id="ajouterPub">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Faire une publication</h4>
+                  <p class="card-category"> Merci de faire attention a vos publications ou il sera supprimer</p>
+                </div>
+                <div class="card-body">
+                <div id="pubSuccess"></div>
+                  <div id="publierForm">
+	                  	<div class="form-group">
+	                  		<label class=""> Votre Publication</label>
+	        				<textarea class="form-control" rows="5" id="pub"></textarea>
+	        			</div>
+	            		<button class="btn btn-success pull-right" onClick="addPub()">Publier</button>
+				</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <!--#########################  footer inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/footer.jsp"/>
+        		
+    <!--##############################################################################-->
+    </div>
+  </div>
+  <!--#########################  Plugin inclusion  ###################################-->
+	
+        <!-- <c:import url="../include/assets/plugin.jsp"/>  -->				
+        		
+    <!--##############################################################################-->
+    
+    <!--#########################  JS lib inclusion  ###################################-->
+	
+        				<c:import url="../include/assets/js.jsp"/>
+        		
+    <!--##############################################################################-->
+    
+    
+	<script type="text/javascript">
+	$(document).ready(function () {
+	});
+	
+	// READ records
+	function voirReponse(id) {
+		var form = "afficherRep";
+	    $.post("O_Forum", {
+	    	id: id,
+	    	form: form
+	    }, function (data, status) {
+	        $("#reponse"+id).html(data);
+	    });
+	}
+	
+
+	// Add Record 
+	function addPub() {
+	    // get values
+	    var pub = $("#pub").val();
+	    var form = "insertPub";
+	    
+	    // Add record
+	    $.post("O_Forum", {
+	    	form: form,
+	    	pub: pub
+	    }, function (data, status) {
+	    	$("#pubSuccess").html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+			'<i class="material-icons">close</i></button><span><b> Success - </b>l\'opertation c\'est fair avec succees</span></div>');
+			location.reload();
+	    });
+	}
+	
+	// Add Record 
+	function addReponse() {
+	    // get values
+	    var form = "insertReponse";
+	    var idPub = $("#hidden_id").val();
+	    var reponse = $("#reponsePub").val();
+	    
+	    $.post("O_Forum", {
+	    	form: form,
+	    	idPub: idPub,
+	    	reponse: reponse
+	    }, function (data, status) {
+	    	$("#success").html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+			'<i class="material-icons">close</i></button><span><b> Success - </b> Votre reponse il a ete publier avec succes</span></div>');
+			
+	    });
+	}	
+        
+    function showFormReponse(id){
+        $("#reponse"+id).html('<div class="form-group"><label class=""> Votre Reponse.</label>'
+        		+'<textarea class="form-control" rows="5" id="reponsePub"></textarea></div>'
+        		+'<input type="hidden" id="hidden_id">'
+            	+'<button class="btn btn-success pull-right" onClick="addReponse()">Repondre</button>');
+        $("#hidden_id").val(id);
+    }
+
+	</script>
+</body>
+
+</html>
+

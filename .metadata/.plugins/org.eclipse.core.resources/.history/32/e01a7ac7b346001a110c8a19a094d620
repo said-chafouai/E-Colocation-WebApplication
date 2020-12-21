@@ -1,0 +1,433 @@
+package beansManager;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+
+import java.sql.PreparedStatement;
+
+import beans.PhotoPropriete;
+import beans.Propriete;
+import database.DataBase;
+
+public class ManagerPropriete {
+	
+	public int fct_getMaxIdPorpriete() {
+		int id=0;
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+		
+			try {
+				connexion = DataBase.connection();
+				preparedStatement = connexion.prepareStatement("select max(id) from propriete;");
+				resultat = preparedStatement.executeQuery();
+
+				if (resultat.next()) {
+					id = resultat.getInt(1);
+					System.out.println("id max = :"+id);
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			} finally {
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (preparedStatement != null)
+						preparedStatement.close();
+					if (connexion != null)
+						connexion.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+
+		return id;
+		
+	}
+	
+	public boolean fct_supprimer(int id_pro) {
+		Connection connexion = null;
+		PreparedStatement preparedStmt = null;
+		boolean retour = false;
+		
+		try {
+			connexion = DataBase.connection();
+			preparedStmt = connexion.prepareStatement("delete from propriete where id=?");
+			preparedStmt.setInt(1,id_pro);	
+			retour = preparedStmt.execute();
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (preparedStmt != null)
+					preparedStmt.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+		return retour;
+	}
+	
+	
+	
+	/* 
+	* fonction qui retourne les proprietes selon le prix,superficie,ville
+	*/
+	public ArrayList<Propriete> fct_find(int prix, int superficie, String ville) {
+		ArrayList<Propriete> proprietes = new ArrayList<Propriete>();
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+		
+			try {
+				connexion = DataBase.connection();
+				if(prix!=0 && superficie!=0 && ville!=null) {
+					preparedStatement = connexion.prepareStatement("select * from propriete where prix=? and superficie=? and ville=?");
+					preparedStatement.setInt(1, prix);
+					preparedStatement.setInt(2, superficie);
+					preparedStatement.setString(3, ville);
+					resultat = preparedStatement.executeQuery();
+					
+					
+				}
+				else if(prix==0 && superficie==0 && ville!=null) {
+				preparedStatement = connexion.prepareStatement("select * from propriete where ville=?");
+				preparedStatement.setString(1, ville);
+				resultat = preparedStatement.executeQuery();
+				}
+				
+				
+				else if(prix==0 && superficie!=0 && ville==null) { 
+					
+				preparedStatement = connexion.prepareStatement("select * from propriete where superficie=?");
+				preparedStatement.setInt(1, superficie);
+				resultat = preparedStatement.executeQuery();
+				}
+				
+			
+				else if(prix!=0 && superficie==0 && ville==null) { 
+				
+				preparedStatement = connexion.prepareStatement("select * from propriete where prix=?");
+				preparedStatement.setInt(1, prix);
+				resultat = preparedStatement.executeQuery();
+				}
+				else if(prix!=0 && superficie!=0 && ville==null) { 
+				preparedStatement = connexion.prepareStatement("select * from propriete where prix=? and superficie=?");
+				preparedStatement.setInt(1, prix);
+				preparedStatement.setInt(2, superficie);
+				resultat = preparedStatement.executeQuery();
+				}
+				
+				
+				else if(prix!=0 && superficie==0 && ville!=null) { 
+				preparedStatement = connexion.prepareStatement("select * from propriete where prix=? and ville=?");
+				preparedStatement.setInt(1, prix);
+				preparedStatement.setString(2, ville);
+				resultat = preparedStatement.executeQuery();
+				}
+				
+				
+				else if(prix==0 && superficie!=0 && ville!=null) { 
+					
+				preparedStatement = connexion.prepareStatement("select * from propriete where superficie=? and ville=?");
+				preparedStatement.setInt(1, superficie);
+				preparedStatement.setString(2, ville);
+				resultat = preparedStatement.executeQuery();
+				}
+				while (resultat.next()) {
+				
+					Propriete propriete = new Propriete();
+					
+					propriete.setId(resultat.getInt("id"));
+					propriete.setCode(resultat.getString("code"));
+					propriete.setAddresse(resultat.getString("adresse"));
+					propriete.setVille(resultat.getString("ville"));
+					propriete.setSuperficie(resultat.getInt("superficie"));
+					propriete.setType(resultat.getString("type"));
+					propriete.setPrix(resultat.getInt("prix"));
+					propriete.setNbMax(resultat.getInt("nbMax"));
+					propriete.setNbSouhaite(resultat.getInt("nbSouhaite"));
+					propriete.setDisponibilite(resultat.getString("disponibilite"));
+					propriete.setNote(resultat.getInt("note"));
+					propriete.setId_proprietaire(resultat.getInt("id_proprietaire"));
+					
+					proprietes.add(propriete);
+
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			} finally {
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (preparedStatement != null)
+						preparedStatement.close();
+					if (connexion != null)
+						connexion.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+
+		return proprietes;
+
+	}
+	
+	public ArrayList<Propriete> fct_findAll() {
+		ArrayList<Propriete> proprietes = new ArrayList<Propriete>();
+		Connection connexion = null;
+		Statement statement = null;
+		ResultSet resultat = null;
+		
+			try {
+				connexion = DataBase.connection();
+				statement = connexion.createStatement();
+				resultat = statement.executeQuery("select * from propriete");
+
+				while (resultat.next()) {
+					Propriete propriete = new Propriete();
+					
+					propriete.setId(resultat.getInt("id"));
+					propriete.setCode(resultat.getString("code"));
+					propriete.setAddresse(resultat.getString("adresse"));
+					propriete.setVille(resultat.getString("ville"));
+					propriete.setSuperficie(resultat.getInt("superficie"));
+					propriete.setType(resultat.getString("type"));
+					propriete.setPrix(resultat.getInt("prix"));
+					propriete.setNbMax(resultat.getInt("nbMax"));
+					propriete.setNbSouhaite(resultat.getInt("nbSouhaite"));
+					propriete.setDisponibilite(resultat.getString("disponibilite"));
+					propriete.setNote(resultat.getInt("note"));
+					propriete.setId_proprietaire(resultat.getInt("id_proprietaire"));
+					
+					proprietes.add(propriete);
+
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			} finally {
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (statement != null)
+						statement.close();
+					if (connexion != null)
+						connexion.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+
+		return proprietes;
+
+	}
+	
+	public ArrayList<Propriete> fct_findAllByOwner(int id_owner) {
+		ArrayList<Propriete> proprietes = new ArrayList<Propriete>();
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+		
+			try {
+				connexion = DataBase.connection();
+				preparedStatement = connexion.prepareStatement("select * from propriete where id_proprietaire=?");
+				preparedStatement.setInt(1, id_owner);
+				resultat = preparedStatement.executeQuery();
+
+				while (resultat.next()) {
+					Propriete propriete = new Propriete();
+					
+					propriete.setId(resultat.getInt("id"));
+					propriete.setCode(resultat.getString("code"));
+					propriete.setAddresse(resultat.getString("adresse"));
+					propriete.setVille(resultat.getString("ville"));
+					propriete.setSuperficie(resultat.getInt("superficie"));
+					propriete.setType(resultat.getString("type"));
+					propriete.setPrix(resultat.getInt("prix"));
+					propriete.setNbMax(resultat.getInt("nbMax"));
+					propriete.setNbSouhaite(resultat.getInt("nbSouhaite"));
+					propriete.setDisponibilite(resultat.getString("disponibilite"));
+					propriete.setNote(resultat.getInt("note"));
+					propriete.setId_proprietaire(resultat.getInt("id_proprietaire"));
+					
+					ManagerPhotoPropriete mngPP = new ManagerPhotoPropriete();
+					ArrayList<PhotoPropriete> pps = mngPP.fct_findPhotosByPropriete(propriete.getId());
+					propriete.setImages(pps);
+					
+					
+					proprietes.add(propriete);
+
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			} finally {
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (preparedStatement != null)
+						preparedStatement.close();
+					if (connexion != null)
+						connexion.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+
+		return proprietes;
+
+	}
+	
+	public ArrayList<Propriete> fct_findMesPropriete(int id_user) {
+		ArrayList<Propriete> proprietes = new ArrayList<Propriete>();
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+		
+			try {
+				connexion = DataBase.connection();
+				preparedStatement = connexion.prepareStatement("select p.* from propriete p,demande d where id_user=? and statut='valider' and d.id_prop=p.id");
+				preparedStatement.setInt(1, id_user);
+				resultat = preparedStatement.executeQuery();
+
+				while (resultat.next()) {
+					Propriete propriete = new Propriete();
+					
+					propriete.setId(resultat.getInt("id"));
+					propriete.setCode(resultat.getString("code"));
+					propriete.setAddresse(resultat.getString("adresse"));
+					propriete.setVille(resultat.getString("ville"));
+					propriete.setSuperficie(resultat.getInt("superficie"));
+					propriete.setType(resultat.getString("type"));
+					propriete.setPrix(resultat.getInt("prix"));
+					propriete.setNbMax(resultat.getInt("nbMax"));
+					propriete.setNbSouhaite(resultat.getInt("nbSouhaite"));
+					propriete.setDisponibilite(resultat.getString("disponibilite"));
+					propriete.setNote(resultat.getInt("note"));
+					propriete.setId_proprietaire(resultat.getInt("id_proprietaire"));
+					
+					proprietes.add(propriete);
+
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			} finally {
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (preparedStatement != null)
+						preparedStatement.close();
+					if (connexion != null)
+						connexion.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+
+		return proprietes;
+
+	}
+	
+	public Propriete fct_findOne(int id_propriete) {
+		Propriete propriete = null;
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultat = null;
+		
+			try {
+				connexion = DataBase.connection();
+				preparedStatement = connexion.prepareStatement("select * from propriete where id=?");
+				preparedStatement.setInt(1, id_propriete);
+				resultat = preparedStatement.executeQuery();
+
+				if (resultat.next()) {
+					propriete = new Propriete();
+					
+					propriete.setId(resultat.getInt("id"));
+					propriete.setCode(resultat.getString("code"));
+					propriete.setAddresse(resultat.getString("adresse"));
+					propriete.setVille(resultat.getString("ville"));
+					propriete.setSuperficie(resultat.getInt("superficier"));
+					propriete.setType(resultat.getString("type"));
+					propriete.setPrix(resultat.getInt("prix"));
+					propriete.setNbMax(resultat.getInt("nbMax"));
+					propriete.setNbSouhaite(resultat.getInt("nbSouhaite"));
+					propriete.setDisponibilite(resultat.getString("disponibilie"));
+					propriete.setNote(resultat.getInt("note"));
+					propriete.setId_proprietaire(resultat.getInt("id_proprietaire"));
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			} finally {
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (preparedStatement != null)
+						preparedStatement.close();
+					if (connexion != null)
+						connexion.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+
+		return propriete;
+
+	}
+
+	
+	public boolean fct_insert(Propriete propriete) {
+		Connection connexion = null;
+		PreparedStatement preparedStmt = null;
+		boolean retour = false;
+		
+		try {
+			connexion = DataBase.connection();
+			preparedStmt = connexion.prepareStatement("insert into propriete(code, adresse, ville, superficie, type, prix, nbMax, nbSouhaite, disponibilite,id_proprietaire) values(?,?,?,?,?,?,?,?,?,?)");
+			preparedStmt.setString(1,propriete.getCode());
+			preparedStmt.setString(2,propriete.getAddresse());
+			preparedStmt.setString(3,propriete.getVille());
+			preparedStmt.setInt(4,propriete.getSuperficie());
+			preparedStmt.setString(5,propriete.getType());
+			preparedStmt.setInt(6,propriete.getPrix());
+			preparedStmt.setInt(7,propriete.getNbMax());
+			preparedStmt.setInt(8,propriete.getNbSouhaite());
+			preparedStmt.setString(9,propriete.getDisponibilite());
+			preparedStmt.setInt(10,propriete.getId_proprietaire());	
+			
+			retour = preparedStmt.execute();
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (preparedStmt != null)
+					preparedStmt.close();
+				if (connexion != null)
+					connexion.close();
+			} catch (SQLException ignore) {
+
+			}
+		}
+		return retour;
+	}
+}

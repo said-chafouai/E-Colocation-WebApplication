@@ -1,0 +1,128 @@
+package beans;
+
+
+
+import java.util.ArrayList;
+
+
+public class Propriete {
+	private int id;
+	private String code;
+	private String addresse;
+	private String ville;
+	private int superficie;
+	private String type;
+	private int prix;
+	private int nbMax;
+	private int nbSouhaite;
+	private String disponibilite;
+	private int Note;
+	private int id_proprietaire;
+	private ArrayList<String> images;
+	
+	public Propriete() {
+		
+	}
+	public Propriete(int id_pro, String code, String addresse, String ville, int superficier, String type, int prix, int nbMax,int nbSouhaite, String disponibilie, int note) {
+		this.id = id_pro;
+		this.code = code;
+		this.addresse = addresse;
+		this.ville = ville;
+		this.superficie = superficier;
+		this.type = type;
+		this.prix = prix;
+		this.nbMax = nbMax;
+		this.nbSouhaite = nbSouhaite;
+		this.disponibilite = disponibilie;
+		this.Note = note;
+	}
+	
+	
+	
+	public void setImages(ArrayList<String> images) {
+		this.images = images;
+	}
+	
+	public ArrayList<String> getImages() {
+		return images;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId_proprietaire() {
+		return id_proprietaire;
+	}
+
+	public void setId_proprietaire(int id_proprietaire) {
+		this.id_proprietaire = id_proprietaire;
+	}
+
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getAddresse() {
+		return addresse;
+	}
+	public void setAddresse(String addresse) {
+		this.addresse = addresse;
+	}
+	public String getVille() {
+		return ville;
+	}
+	public void setVille(String ville) {
+		this.ville = ville;
+	}
+	public int getSuperficie() {
+		return superficie;
+	}
+	public void setSuperficie(int superficier) {
+		this.superficie = superficier;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getPrix() {
+		return prix;
+	}
+	public void setPrix(int prix) {
+		this.prix = prix;
+	}
+	public int getNbMax() {
+		return nbMax;
+	}
+	public void setNbMax(int nbMax) {
+		this.nbMax = nbMax;
+	}
+	public int getNbSouhaite() {
+		return nbSouhaite;
+	}
+	public void setNbSouhaite(int nbSouhaite) {
+		this.nbSouhaite = nbSouhaite;
+	}
+	public String getDisponibilite() {
+		return disponibilite;
+	}
+	public void setDisponibilite(String disponibilite) {
+		this.disponibilite = disponibilite;
+	}
+	public int getNote() {
+		return Note;
+	}
+	public void setNote(int note) {
+		Note = note;
+	}
+	
+	
+
+}

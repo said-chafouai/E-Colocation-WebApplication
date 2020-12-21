@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--#########################  Head inclusion  ###################################-->
+
+    <c:import url="../include/assets/head.jsp" />
+
+    <!--##############################################################################-->
+    <title>
+        Material Dashboard by Creative Tim
+    </title>
+</head>
+
+<body class="">
+    <div class="wrapper ">
+        <!--#########################  Sidebar inclusion  ###################################-->
+
+        <c:import url="../include/assets/sidebarOffreur.jsp" />
+
+        <!--##############################################################################-->
+        <div class="main-panel">
+            <!--#########################  Navbar inclusion  ###################################-->
+
+            <c:import url="../include/assets/navbar.jsp" />
+
+            <!--##############################################################################-->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-primary">
+                                    <h4 class="card-title">Annonces</h4>
+                                    <p class="card-category">Consulter vous annonces</p>
+                                </div>
+                                <div class="card-body">
+                                    <a class="btn btn-success pull-right" href="#ajouterAnnonce">Ajouter une annonce</a>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class=" text-primary">
+                                                <th>
+                                                    ID
+                                                </th>
+                                                <th>
+                                                    Name
+                                                </th>
+                                                <th>
+                                                    Country
+                                                </th>
+                                                <th>
+                                                    City
+                                                </th>
+                                                <th>
+                                                    Salary
+                                                </th>
+                                                <th class="text-warning">Modifier</th>
+                                                <th class="text-danger">Supprimer</th>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="propriete" items="${proprietes}">
+                                                    <tr>
+                                                        <td>
+                                                            ${propriete.addresse}
+                                                        </td>
+                                                        <td>
+                                                        ${propriete.ville}
+                                                        </td>
+
+                                                        <td>
+                                                        ${propriete.superficie}
+                                                        </td>
+                                                        <td>
+                                                        ${propriete.type}
+                                                        </td>
+                                                        <td>
+                                                        ${propriete.prix}
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-warning" onClick="modifierAnnonce( ${propriete.id})">Modifier</button>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-danger" onClick="suprimerAnnonce(${propriete.id})">Supprimer</button>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="ajouterAnnonce">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header card-header-primary">
+                                    <h4 class="card-title">Ajouter une annonces</h4>
+                                    <p class="card-category">Vous devez remplir tous les champs</p>
+                                </div>
+                                <div class="card-body">
+                                    <div id="success"></div>
+                                  	<form  action="O_Annonces" enctype="multipart/form-data" method="post">
+	                                    <div class="form-group">
+	                                        <input type="text" id="adresse" placeholder="Adresse" class="form-control" required>
+	                                    </div>
+	
+	                                    <div class="form-group">
+	                                        <input type="text" id="ville" placeholder="Ville" class="form-control" required>
+	                                    </div>
+	
+	                                    <div class="form-group">
+	                                        <input type="number" id="superficie" placeholder="superficier" class="form-control" required>
+	                                    </div>
+	
+	                                    <div class="form-group">
+	                                        <select id="type" class="form-control" required>
+	                                            <option>Choisissez un type de propriete ...</option>
+	                                            <option>type 1</option>
+	                                            <option>type 2</option>
+	                                            <option>type 3</option>
+	                                        </select>
+	                                    </div>
+	                                    <div class="form-group">
+	                                        <input type="Number" class="form-control" placeholder="prix" id="prix" required>
+	                                    </div>
+	                                    <div class="form-group">
+	                                        <input type="number" class="form-control" placeholder="Nombre maximum de personne" id="nbMax" required>
+	                                    </div>
+	                                    <div class="form-group">
+	                                        <input type="number" class="form-control" placeholder="Nombre souhite" id="nbSouhaite" required>
+	                                    </div>
+	                                    <div class="form-group">
+	                                        <input type="date" class="form-control" placeholder="date de disponible" id="disponibilite" required>
+	                                    </div>
+	                                     <div class="form-group">
+	                                        <input type="date" class="form-control" placeholder="date de disponible" id="photo1" required>
+	                                    </div>
+	                                     <div class="form-group">
+	                                        <input type="date" class="form-control" placeholder="date de disponible" id="photo2" required>
+	                                    </div>
+	                                     <div class="form-group">
+	                                        <input type="date" class="form-control" placeholder="date de disponible" id="photo3" required>
+	                                    </div>
+	                                    <div class="form-group">
+	                                        <input type="submit" class="btn btn-primary pull-right"value="Ajouter">
+	                                    </div>
+                                	</form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--#########################  footer inclusion  ###################################-->
+
+            <c:import url="../include/assets/footer.jsp" />
+
+            <!--##############################################################################-->
+        </div>
+    </div>
+    <!--#########################  Plugin inclusion  ###################################-->
+
+    <!-- <c:import url="../include/assets/plugin.jsp"/>  -->
+
+    <!--##############################################################################-->
+
+    <!--#########################  JS lib inclusion  ###################################-->
+
+    <c:import url="../include/assets/js.jsp" />
+
+    <!--##############################################################################-->
+
+
+</body>
+
+</html>
